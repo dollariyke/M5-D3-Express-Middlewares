@@ -34,8 +34,8 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
   const usersDB = readFile("users.json")
   const newUser = {
-    ...req.body,
-    ID: uniqid(),
+    ...req.body,// this retrieves all the properties in the request body
+    ID: uniqid(),//This creates an ID automatically when a post is done.
     modifiedAt: new Date(),
   }
 
@@ -51,20 +51,20 @@ router.delete("/:id", (req, res) => {
   const newDb = usersDB.filter(user => user.ID !== req.params.id)
   fs.writeFileSync(path.join(__dirname, "users.json"), JSON.stringify(newDb))
 
-  res.status(204).send()
+  res.status(204).send()// empty response is sent when delete is done
 })
 
 router.put("/:id", (req, res) => {
   const usersDB = readFile("users.json")
-  const newDb = usersDB.filter(user => user.ID !== req.params.id)
+  const newDb = usersDB.filter(user => user.ID !== req.params.id)// this contains all users without the one with id as req.query.id
 
   const modifiedUser = {
     ...req.body,
-    ID: req.params.id,
+    ID: req.params.id,// sending back the ID of the user that is modified
     modifiedAt: new Date(),
   }
 
-  newDb.push(modifiedUser)
+  newDb.push(modifiedUser)// pushing modifiedUser into the newDb
   fs.writeFileSync(path.join(__dirname, "users.json"), JSON.stringify(newDb))
 
   res.send({ id: modifiedUser.ID })
